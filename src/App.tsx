@@ -126,13 +126,13 @@ function App() {
   }
 
   //manejo de los filtros: se construye una nueva lista "filteredDogs" en bas a los filstros activos y se utiliza esta nueva lita para renderizarla en dogList
-
+//rcorre los perros de la dogList y dcide cuales debe mostrarse en pantalla
   const filteredDogs = dogList.filter(dog => {
     const breed = getBreedFromUrl(dog.imgUrl); //se define breed
-    const matchBreed = selectedBreedFilter ? breed === selectedBreedFilter : true;
-    const matchLikes = filterByLikes ? dog.likes > 0 : true;
-    const matchDislikes = filterByDislikes ? dog.dislikes > 0 : true;
-    return matchBreed && matchLikes && matchDislikes;
+    const matchBreed = selectedBreedFilter ? breed === selectedBreedFilter : true; //si selectedBredFilter está activo compara si l prro actual tine esa raza, si no hay filtro rtorna true, acpeta cualquier raza
+    const matchLikes = filterByLikes ? dog.likes > 0 : true; //si el filtro de likes está activado, este perro solo pasa si tiene más likes que dislikes, s no está activado, retorna true para que no afecte al filtrado.
+    const matchDislikes = filterByDislikes ? dog.dislikes > 0 : true; //igual que con los likes
+    return matchBreed && matchLikes && matchDislikes; //el perro solo pasa el filtro si cumple con la raza, los likes y los dislikes. Si algún filtro no se cumple, ese perro no se mostrará.
   })
 
   return (
