@@ -10,6 +10,9 @@ interface Dog {
 }
 
 function App() {
+  const[selectedBreedFilter, setSelectedBreedFilter] = useState<string | null>(null); //para manejar los filstros de raza
+  const[filterByLikes, setFilterByLikes] = useState(false); //para manejar el filtro de like
+  const[filterByDislikes, setFilterByDislikes] = useState(false); //para manejar el filtro de dislike
   const[breed, setBreed] = useState('')
   const[allBreeds, setAllBreeds] = useState<string[]>([])
   const[name, setName] = useState('');
@@ -86,16 +89,6 @@ function App() {
     setDogList(updatedList);
   }
 
-  //funciones que filtran las perros por likes y dislikes
-  
-
-  const handleLikeFilter = () => {
-  };
-  
-  const handleDislikeFilter = () => {
-  
-  };
-
   //función para extraer la raza a partir de la url
   const getBreedFromUrl = (url: string): string =>{
     const match = url.match(/breeds\/([^/]+)/); //expresión regular. Busca la parte después de "breeds/" hasta que encuentra el siguiente /
@@ -132,6 +125,16 @@ function App() {
     setName(event.target.value);
   }
 
+  //manejo de los filtros: se construye una nueva lista "filteredDogs" en bas a los filstros activos y se utiliza esta nueva lita para renderizarla en dogList
+
+  const filteredDogs = dogList.filter(dog => {
+    const breed = getBreedFromUrl(dog.imgUrl); //se define breed
+    const matchBreed = selectedBreedFilter ? breed === selectedBreedFilter : true;
+    const matchLikes = filterByLikes ? dog.likes > 0 : true;
+    const matchDislikes = filterByDislikes ? dog.dislikes > 0 : true;
+    return matchBreed && matchLikes && matchDislikes;
+  })
+
   return (
     <>
     <h1>Pawesome Pup Generator</h1>
@@ -155,11 +158,11 @@ function App() {
     </button>
     <div>
       <p>Filtrar por:</p>
-      <button className='filter-btn'onClick={handleLikeFilter}>
-        Likes 💕
+      <button className='filter-btn'onClick={() => setFilterByLikes(!filterByLikes)}>
+        {filterByLikes ? 'Quitar filtro de Likes 💕' : 'Filtrar por Likes 💕'}
       </button>
-      <button className='filter-btn'onClick={handleDislikeFilter}>
-        Dislikes 🤢
+      <button className='filter-btn'onClick={() => setFilterByDislikes(!filterByDislikes)}>
+        {filterByDislikes ? 'Quitar filtro de Dislikes 🤢' : 'Filtrar por Dislikes 🤢'}
       </button>
     </div>
     <div className='breed-btns'>
@@ -167,7 +170,13 @@ function App() {
       {/* Object.entries(breedCountMap) convierte el objeto a un array así: [["pitbull", 2], ["lhasa", 1]] */}
       {/* hace un .map(...) para recorrer cada pareja [breed, count] y crea un botón por cada raza */}
       {Object.entries(breedCountMap).map(([breed, count]) => ( 
-        <button key={breed} className="breed-btn">
+        <button
+          key={breed}
+          className={`breed-btn ${selectedBreedFilter === breed ? 'selected' : ''}`}
+          onClick={() =>
+            setSelectedBreedFilter(selectedBreedFilter === breed ? null : breed)
+          }
+        >
           {breed} ({count})
         </button>
       ))}
@@ -175,7 +184,7 @@ function App() {
       <div className = 'dog-list'>
         {showMierdon && <Mierdon name={name} />}
         {/* ahora hacemos un map, con dog(cada perro del array) y su índice correspondinte */}
-        {dogList.map((dog, index)=> { 
+        {filteredDogs.map((dog, index)=> { 
           return (
             <div className = 'dog'>
           <img src={dog.imgUrl}/>
