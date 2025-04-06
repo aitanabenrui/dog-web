@@ -81,6 +81,16 @@ img {
 }
 
 .breed-btn.selected {
-  background-color: #2a4e61;
+  background-color: #0e6dc1;
+  font-weight: bold;
+}
+
+.like-selected {
+  background-color: #ff4d97;
+  font-weight: bold;
+}
+
+.dislike-selected {
+  background-color: #16911a;
   font-weight: bold;
 }

@@ -171,10 +171,10 @@ function App() {
     </button>
     <div>
       <p>Filtrar por:</p>
-      <button className='filter-btn'onClick={() => setFilterByLikes(!filterByLikes)}>
+      <button className={`filter-btn ${filterByLikes ? 'like-selected' : ''}`} onClick={() => setFilterByLikes(!filterByLikes)}>
         {filterByLikes ? 'Quitar filtro de Likes 💕' : 'Filtrar por Likes 💕'}
       </button>
-      <button className='filter-btn'onClick={() => setFilterByDislikes(!filterByDislikes)}>
+      <button className={`filter-btn ${filterByDislikes ? 'dislike-selected' : ''}`} onClick={() => setFilterByDislikes(!filterByDislikes)}>
         {filterByDislikes ? 'Quitar filtro de Dislikes 🤢' : 'Filtrar por Dislikes 🤢'}
       </button>
     </div>
@@ -185,7 +185,8 @@ function App() {
       {Object.entries(breedCountMap).map(([breed, count]) => ( 
         <button
         key={breed}
-        className={`breed-btn ${selectedBreedFilter.includes(breed) ? 'selected' : ''}`}
+        // dependiendo de si la raza actual breed está en el array de razas seleccionadas o no, se le añadirá la clase selected
+        className={`breed-btn ${selectedBreedFilter.includes(breed) ? 'selected' : ''}`} 
         onClick={() => toggleBreedFilter(breed)} // Ahora, con toggle, podemos agregar o quitar razas
         >
           {breed} ({count})
