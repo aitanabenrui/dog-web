@@ -72,6 +72,20 @@ function App() {
     }
   };
 
+  //que los botones de like y dislike funcionen
+
+  const handleLikes = (index: number) =>{ //recibe el indx del perro en la lista para saber cual debe actualizar
+    const updatedList = [...dogList];
+    updatedList[index].likes += 1; 
+    setDogList(updatedList);
+  }
+
+  const handleDislikes = (index: number) =>{
+    const updatedList = [...dogList];
+    updatedList[index].dislikes += 1; 
+    setDogList(updatedList);
+  }
+
   const handleBreedChange = (event: ChangeEvent<HTMLSelectElement>) =>{
     setBreed(event.target.value);
     
@@ -116,7 +130,8 @@ function App() {
     </button>
       <div className = 'dog-list'>
         {showMierdon && <Mierdon name={name} />}
-        {dogList.map((dog)=> {
+        {/* ahora hacemos un map, con dog(cada perro del array) y su índice correspondinte */}
+        {dogList.map((dog, index)=> { 
           return (
             <div className = 'dog'>
           <img src={dog.imgUrl}/>
@@ -125,8 +140,8 @@ function App() {
             <span>{dog.dislikes} 🤢</span>
           </div>
           <div className='dog__actions'>
-            <button>Like</button>
-            <button>DisLike</button>
+            <button onClick={()=>handleLikes(index)}>Like</button> {/* se le pasa el indice de cada perro para que la función handleLikes sepa que dog en concreto debe actualizar */}
+            <button onClick={() =>handleDislikes(index)}>DisLike</button>
           </div>
         </div>
           );
