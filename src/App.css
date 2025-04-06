@@ -94,3 +94,8 @@ img {
   background-color: #16911a;
   font-weight: bold;
 }
+
+.dog-breed-name {
+  margin: 0;
+  padding-bottom: 10px;
+}

@@ -224,6 +224,7 @@ corresponde con dogList, así que terminas dándole like al perro equivocado
         {filteredDogs.map((dog)=> { 
           return (
             <div className = 'dog'>
+              <h3 className='dog-breed-name'>{getBreedFromUrl(dog.imgUrl)}</h3>
           <img src={dog.imgUrl}/>
           <div className='dog__votes'>
             <span>{dog.likes} 💕</span>
