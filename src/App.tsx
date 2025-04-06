@@ -57,6 +57,21 @@ function App() {
     }
   };
 
+  //añadir un perro al final
+  const handleAddStartDogClick = async () => {
+    console.log('añadir al principio');
+    
+    const dog = await getRandomDogImage(breed);
+    if(dog){
+      setDogList([
+        {
+          imgUrl: dog?.imgUrl,
+          likes: dog.likeCount,
+          dislikes: dog.dislikeCount,
+      }, ...dogList])
+    }
+  };
+
   const handleBreedChange = (event: ChangeEvent<HTMLSelectElement>) =>{
     setBreed(event.target.value);
     
@@ -92,6 +107,9 @@ function App() {
     </div>
     <button className='add-btn'onClick={handleAddDogClick}>
       Añadir 1 perro al final
+    </button>
+    <button className='add-btn'onClick={handleAddStartDogClick}>
+      Añadir 1 perro al principio
     </button>
     <button className='add-btn'onClick={() =>{ setShowMierdon(!showMierdon);}}>
         Que {showMierdon ? 'desaparezca' : 'aparezca'} mierdon
