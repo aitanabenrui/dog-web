@@ -221,7 +221,7 @@ corresponde con dogList, así que terminas dándole like al perro equivocado
       <div className = 'dog-list'>
         {showMierdon && <Mierdon name={name} />}
         {/* ahora hacemos un map, con dog(cada perro del array) y su índice correspondinte */}
-        {filteredDogs.map((dog, index)=> { 
+        {filteredDogs.map((dog)=> { 
           return (
             <div className = 'dog'>
           <img src={dog.imgUrl}/>
