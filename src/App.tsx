@@ -76,9 +76,14 @@ function App() {
     }
   };
 
-  //que los botones de like y dislike funcionen
+  //que los botones de like y dislike funcionen:
+  /*Esto funciona solo si no estás filtrando, porque el index en el map() coincide con la posición real del perro en dogList.
+Pero cuando filtras (por raza, por likes o por dislikes), estás mostrando 
+una copia filtrada: filteredDogs. El índice dentro de filteredDogs ya no 
+corresponde con dogList, así que terminas dándole like al perro equivocado 
+(¡o a ninguno si el índice no existe!). */
 
-  const handleLikes = (index: number) =>{ //recibe el indx del perro en la lista para saber cual debe actualizar
+  /* const handleLikes = (index: number) =>{ //recibe el indx del perro en la lista para saber cual debe actualizar
     const updatedList = [...dogList];
     updatedList[index].likes += 1; 
     setDogList(updatedList);
@@ -88,7 +93,27 @@ function App() {
     const updatedList = [...dogList];
     updatedList[index].dislikes += 1; 
     setDogList(updatedList);
-  }
+  } */
+
+    //a ver si con esto funciona, en vez de pasar los indices, que ya no coinciden,se le pasan las imágenes url 
+    const handleLikes = (imgUrl: string) => {
+      const updatedList = [...dogList]; //copia de dogList para no modificarlo directamente
+      const index = updatedList.findIndex(dog => dog.imgUrl === imgUrl); //buscamos el índice real en dogList
+      if (index !== -1) {  // si encontramos el perro...
+        updatedList[index].likes += 1;  // le sumamos un like
+        setDogList(updatedList); // y actualizamos el estado
+      }
+    };
+    
+    const handleDislikes = (imgUrl: string) => {
+      const updatedList = [...dogList];
+      const index = updatedList.findIndex(dog => dog.imgUrl === imgUrl);
+      if (index !== -1) {
+        updatedList[index].dislikes += 1;
+        setDogList(updatedList);
+      }
+    };
+    
 
   //función para extraer la raza a partir de la url
   const getBreedFromUrl = (url: string): string =>{
@@ -205,8 +230,8 @@ function App() {
             <span>{dog.dislikes} 🤢</span>
           </div>
           <div className='dog__actions'>
-            <button onClick={()=>handleLikes(index)}>Like</button> {/* se le pasa el indice de cada perro para que la función handleLikes sepa que dog en concreto debe actualizar */}
-            <button onClick={() =>handleDislikes(index)}>DisLike</button>
+            <button onClick={()=>handleLikes(dog.imgUrl)}>Like</button> {/* se le pasa el indice de cada perro para que la función handleLikes sepa que dog en concreto debe actualizar */}
+            <button onClick={() =>handleDislikes(dog.imgUrl)}>DisLike</button>
           </div>
         </div>
           );
