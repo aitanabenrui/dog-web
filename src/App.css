@@ -87,6 +87,7 @@ img {
 
 .add-btn {
   justify-content: center; /* Para centrarlo */
+  margin: 10px;
 }
 
 .breed-picker {
@@ -95,4 +96,14 @@ img {
 
 .breed-picker select {
   margin-left: 10px;
+}
+
+.filter-btn {
+  margin-bottom: 10px;
+  margin-inline: 10px;
+}
+
+.breed-btn {
+  margin-bottom: 10px;
+  margin-inline: 10px;
 }

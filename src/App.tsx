@@ -86,6 +86,31 @@ function App() {
     setDogList(updatedList);
   }
 
+  //funciones que filtran las perros por likes y dislikes
+  
+
+  const handleLikeFilter = () => {
+  };
+  
+  const handleDislikeFilter = () => {
+  
+  };
+
+  //función para extraer la raza a partir de la url
+  const getBreedFromUrl = (url: string): string =>{
+    const match = url.match(/breeds\/([^/]+)/); //expresión regular. Busca la parte después de "breeds/" hasta que encuentra el siguiente /
+    return match ? match[1]: 'unknown'; //si encuentra algo (match no es null) devuelve el primer grupo de captura (match[1]), que es el nombre de la raza
+  } //Si no encuentra nada, devuelve 'unknown'
+
+  //Contar las razas:  mapa que tiene como clave una raza (string) y como valor un número (number).
+  const breedCountMap: Record<string, number> = {}; //se crea un objeto llamado breedCountMap
+
+  dogList.forEach(dog => {
+    const breed = getBreedFromUrl(dog.imgUrl); //llama a la función que obtiene la raza de la url
+    breedCountMap[breed] = (breedCountMap[breed] || 0) + 1; // en l objeto breedCountMap añade o suma 1 a la raza dependiendo de si existe
+  });
+
+
   const handleBreedChange = (event: ChangeEvent<HTMLSelectElement>) =>{
     setBreed(event.target.value);
     
@@ -128,6 +153,25 @@ function App() {
     <button className='add-btn'onClick={() =>{ setShowMierdon(!showMierdon);}}>
         Que {showMierdon ? 'desaparezca' : 'aparezca'} mierdon
     </button>
+    <div>
+      <p>Filtrar por:</p>
+      <button className='filter-btn'onClick={handleLikeFilter}>
+        Likes 💕
+      </button>
+      <button className='filter-btn'onClick={handleDislikeFilter}>
+        Dislikes 🤢
+      </button>
+    </div>
+    <div className='breed-btns'>
+      <h2>Razas actuales:</h2>
+      {/* Object.entries(breedCountMap) convierte el objeto a un array así: [["pitbull", 2], ["lhasa", 1]] */}
+      {/* hace un .map(...) para recorrer cada pareja [breed, count] y crea un botón por cada raza */}
+      {Object.entries(breedCountMap).map(([breed, count]) => ( 
+        <button key={breed} className="breed-btn">
+          {breed} ({count})
+        </button>
+      ))}
+    </div>
       <div className = 'dog-list'>
         {showMierdon && <Mierdon name={name} />}
         {/* ahora hacemos un map, con dog(cada perro del array) y su índice correspondinte */}
