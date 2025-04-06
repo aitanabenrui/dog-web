@@ -10,7 +10,8 @@ interface Dog {
 }
 
 function App() {
-  const[selectedBreedFilter, setSelectedBreedFilter] = useState<string | null>(null); //para manejar los filstros de raza
+  //selectedBreedFilter es un array
+  const[selectedBreedFilter, setSelectedBreedFilter] = useState<string[]>([]); //para manejar los filstros de raza
   const[filterByLikes, setFilterByLikes] = useState(false); //para manejar el filtro de like
   const[filterByDislikes, setFilterByDislikes] = useState(false); //para manejar el filtro de dislike
   const[breed, setBreed] = useState('')
@@ -129,11 +130,23 @@ function App() {
 //rcorre los perros de la dogList y dcide cuales debe mostrarse en pantalla
   const filteredDogs = dogList.filter(dog => {
     const breed = getBreedFromUrl(dog.imgUrl); //se define breed
-    const matchBreed = selectedBreedFilter ? breed === selectedBreedFilter : true; //si selectedBredFilter está activo compara si l prro actual tine esa raza, si no hay filtro rtorna true, acpeta cualquier raza
+    const matchBreed = //acepta cualqur perro que coincida con cualquier raza seleccionada
+    selectedBreedFilter.length > 0
+    ? selectedBreedFilter.includes(breed) // Acepta cualquier perro que coincida con cualquiera de las razas seleccionadas
+    : true;
     const matchLikes = filterByLikes ? dog.likes > 0 : true; //si el filtro de likes está activado, este perro solo pasa si tiene más likes que dislikes, s no está activado, retorna true para que no afecte al filtrado.
     const matchDislikes = filterByDislikes ? dog.dislikes > 0 : true; //igual que con los likes
     return matchBreed && matchLikes && matchDislikes; //el perro solo pasa el filtro si cumple con la raza, los likes y los dislikes. Si algún filtro no se cumple, ese perro no se mostrará.
-  })
+  });
+
+  //función para quitar o añadir raza al filtro, se utiliza setSelectedBreedFilter para actualizar el array de razas, si la raza está, dejará de estarlo y viceversa
+  const toggleBreedFilter = (breed: string) => {
+    setSelectedBreedFilter((prevFilters) => //prevFilters es el calor actual de selectedBreedFilter
+      prevFilters.includes(breed) //si incluye la raza en el array la elimina
+        ? prevFilters.filter((item) => item !== breed) // Si la raza ya está seleccionada, la eliminamos del filtro, crea un nuevo array que excliye la raza, todo será true menos esa raza en concreto
+        : [...prevFilters, breed] // Si no está seleccionada, la añadimos al filtro
+    );
+  };
 
   return (
     <>
@@ -171,11 +184,9 @@ function App() {
       {/* hace un .map(...) para recorrer cada pareja [breed, count] y crea un botón por cada raza */}
       {Object.entries(breedCountMap).map(([breed, count]) => ( 
         <button
-          key={breed}
-          className={`breed-btn ${selectedBreedFilter === breed ? 'selected' : ''}`}
-          onClick={() =>
-            setSelectedBreedFilter(selectedBreedFilter === breed ? null : breed)
-          }
+        key={breed}
+        className={`breed-btn ${selectedBreedFilter.includes(breed) ? 'selected' : ''}`}
+        onClick={() => toggleBreedFilter(breed)} // Ahora, con toggle, podemos agregar o quitar razas
         >
           {breed} ({count})
         </button>
